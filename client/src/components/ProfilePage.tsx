@@ -2,16 +2,16 @@
 import { useEffect, useState } from 'react';
 
 interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
-  bio: string;
 }
 
 interface Post {
-  id: string;
+  _id: string;
   content: string;
   createdAt: string;
+  author: User;
 }
 
 export default function ProfilePage({ userId }: { userId: string }) {
@@ -20,16 +20,29 @@ export default function ProfilePage({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+
     Promise.all([
-      fetch(`/api/users/${userId}`).then(res => res.json()),
-      fetch(`/api/users/${userId}/posts`).then(res => res.json())
+      fetch(`http://localhost:5000/api/users/${userId}`, { headers }).then(res => res.json()),
+      fetch(`http://localhost:5000/api/users/${userId}/posts`, { headers }).then(res => res.json())
     ])
       .then(([userData, postsData]) => {
-        setUser(userData.user);
-        setPosts(postsData.posts || []);
+        setUser(userData);
+        setPosts(postsData || []);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((error) => {
+        console.error('Error fetching profile data:', error);
+        setLoading(false);
+      });
   }, [userId]);
 
   if (loading) {
@@ -61,7 +74,6 @@ export default function ProfilePage({ userId }: { userId: string }) {
             <div className="text-gray-600 dark:text-gray-400 mb-2">{user.email}</div>
           </div>
         </div>
-        <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{user.bio}</div>
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
@@ -73,7 +85,7 @@ export default function ProfilePage({ userId }: { userId: string }) {
         ) : (
           <ul className="space-y-6">
             {posts.map(post => (
-              <li key={post.id} className="border-b dark:border-gray-700 last:border-0 pb-6 last:pb-0">
+              <li key={post._id} className="border-b dark:border-gray-700 last:border-0 pb-6 last:pb-0">
                 <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mb-2">{post.content}</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Posted on {new Date(post.createdAt).toLocaleString()}
