@@ -46,7 +46,7 @@ const connectDB = async () => {
   }
 
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://geekysharma31:bq00TVbJSVw1I5eL@cluster0.urb7jbj.mongodb.net/';
+    const mongoURI = process.env.MONGODB_URI;
     console.log('Establishing new MongoDB connection...');
     
     await mongoose.connect(mongoURI, {
