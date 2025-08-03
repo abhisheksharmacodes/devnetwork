@@ -46,14 +46,24 @@ const connectDB = async () => {
   }
 
   try {
-    const mongoURI = process.env.MONGODB_URI;
+    const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://geekysharma31:bq00TVbJSVw1I5eL@cluster0.urb7jbj.mongodb.net/devnetwork?retryWrites=true&w=majority';
     console.log('Establishing new MongoDB connection...');
     
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      serverSelectionTimeoutMS: 10000, // Increased timeout to 10s
       socketTimeoutMS: 45000, // Close sockets after 45s
+      retryWrites: true,
+      w: 'majority',
+      retryReads: true,
+      // Add connection pool settings
+      maxPoolSize: 10,
+      minPoolSize: 5,
+      maxIdleTimeMS: 30000,
+      // Add retry settings
+      connectTimeoutMS: 10000,
+      heartbeatFrequencyMS: 2000,
     });
 
     isConnected = true;
@@ -75,9 +85,15 @@ const connectDB = async () => {
     });
 
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('MongoDB connection error:', {
+      message: error.message,
+      code: error.code,
+      name: error.name
+    });
     isConnected = false;
-    process.exit(1);  // Exit if unable to connect to database
+    
+    // Instead of exiting, throw the error to be handled by the middleware
+    throw new Error('Database connection failed - please try again later');
   }
 };
 
