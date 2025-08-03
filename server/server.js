@@ -40,7 +40,11 @@ const User = mongoose.model('User', userSchema);
 const postSchema = new mongoose.Schema({
   content: { type: String, required: true },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  likeCount: { type: Number, default: 0 },
+  dislikeCount: { type: Number, default: 0 }
 });
 
 const Post = mongoose.model('Post', postSchema);
@@ -234,6 +238,98 @@ app.get('/api/users/:userId/posts', async (req, res) => {
     res.json(posts);
   } catch (error) {
     console.error('Get user posts error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Like a post
+app.post('/api/posts/:postId/like', authenticateToken, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    const userId = req.user.userId;
+    const hasLiked = post.likes.includes(userId);
+    const hasDisliked = post.dislikes.includes(userId);
+
+    if (hasLiked) {
+      // Unlike if already liked
+      post.likes = post.likes.filter(id => id.toString() !== userId);
+      post.likeCount -= 1;
+    } else {
+      // Like and remove from dislikes if previously disliked
+      if (hasDisliked) {
+        post.dislikes = post.dislikes.filter(id => id.toString() !== userId);
+        post.dislikeCount -= 1;
+      }
+      post.likes.push(userId);
+      post.likeCount += 1;
+    }
+
+    await post.save();
+    res.json({ likeCount: post.likeCount, dislikeCount: post.dislikeCount, hasLiked: !hasLiked, hasDisliked: false });
+  } catch (error) {
+    console.error('Like post error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Dislike a post
+app.post('/api/posts/:postId/dislike', authenticateToken, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    const userId = req.user.userId;
+    const hasLiked = post.likes.includes(userId);
+    const hasDisliked = post.dislikes.includes(userId);
+
+    if (hasDisliked) {
+      // Remove dislike if already disliked
+      post.dislikes = post.dislikes.filter(id => id.toString() !== userId);
+      post.dislikeCount -= 1;
+    } else {
+      // Dislike and remove from likes if previously liked
+      if (hasLiked) {
+        post.likes = post.likes.filter(id => id.toString() !== userId);
+        post.likeCount -= 1;
+      }
+      post.dislikes.push(userId);
+      post.dislikeCount += 1;
+    }
+
+    await post.save();
+    res.json({ likeCount: post.likeCount, dislikeCount: post.dislikeCount, hasLiked: false, hasDisliked: !hasDisliked });
+  } catch (error) {
+    console.error('Dislike post error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get post interaction status for a user
+app.get('/api/posts/:postId/interaction', authenticateToken, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    const userId = req.user.userId;
+    const hasLiked = post.likes.includes(userId);
+    const hasDisliked = post.dislikes.includes(userId);
+
+    res.json({
+      likeCount: post.likeCount,
+      dislikeCount: post.dislikeCount,
+      hasLiked,
+      hasDisliked
+    });
+  } catch (error) {
+    console.error('Get post interaction error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

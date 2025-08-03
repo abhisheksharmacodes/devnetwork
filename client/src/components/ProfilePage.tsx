@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface User {
   _id: string;
@@ -15,36 +15,21 @@ interface Post {
   author: User;
 }
 
-export default function ProfilePage({ userId }: { userId: string }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
+interface InitialData {
+  user: User | null;
+  posts: Post[];
+}
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
-    const headers = {
-      'Authorization': `Bearer ${token}`
-    };
-
-    Promise.all([
-      fetch(`http://localhost:5000/api/users/${userId}`, { headers }).then(res => res.json()),
-      fetch(`http://localhost:5000/api/users/${userId}/posts`, { headers }).then(res => res.json())
-    ])
-      .then(([userData, postsData]) => {
-        setUser(userData);
-        setPosts(postsData || []);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching profile data:', error);
-        setLoading(false);
-      });
-  }, [userId]);
+export default function ProfilePage({ 
+  userId, 
+  initialData 
+}: { 
+  userId: string;
+  initialData: InitialData;
+}) {
+  const [user, setUser] = useState<User | null>(initialData.user);
+  const [posts, setPosts] = useState<Post[]>(initialData.posts);
+  const [loading, setLoading] = useState(false);
 
   if (loading) {
     return (
@@ -58,7 +43,7 @@ export default function ProfilePage({ userId }: { userId: string }) {
     return (
       <div className="max-w-2xl mx-auto mt-10 text-center py-20 bg-white  rounded-lg shadow-sm">
         <h2 className="text-2xl font-bold text-gray-900 ">User not found</h2>
-        <p className="text-gray-600  mt-2">This profile doesn't exist or has been removed.</p>
+        <p className="text-gray-600  mt-2">This profile doesn&apos;t exist or has been removed.</p>
       </div>
     );
   }

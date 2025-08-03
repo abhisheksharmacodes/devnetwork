@@ -1,25 +1,12 @@
 
 'use client';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import Feed from '../components/Feed';
-
-interface OptimisticPost {
-  _id: string;
-  content: string;
-  createdAt: string;
-  author: {
-    _id: string;
-    name: string;
-    email: string;
-  };
-}
+import Feed from '@/components/Feed';
 
 export default function Home() {
   const [content, setContent] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [user, setUser] = useState<{ name: string; _id: string } | null>(null);
-  const [optimisticPosts, setOptimisticPosts] = useState<OptimisticPost[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -41,47 +28,22 @@ export default function Home() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    // Trim content once at the start
-    const trimmedContent = content.trim();
-    
-    // Create optimistic post
-    const optimisticPost: OptimisticPost = {
-      _id: `temp-${Date.now()}`,
-      content: trimmedContent,
-      createdAt: new Date().toISOString(),
-      author: {
-        _id: user._id,
-        name: user.name,
-        email: '' // Email isn't shown in the UI
-      }
-    };
-
-    // Add optimistic post
-    setOptimisticPosts(prev => [optimisticPost, ...prev]);
-    
-    // Clear input and close create mode immediately
-    setContent('');
-    setIsCreating(false);
-
     fetch('http://localhost:5000/api/posts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ content: trimmedContent })
+      body: JSON.stringify({ content: content.trim() })
     })
       .then(res => res.json())
       .then(() => {
-        // Remove the optimistic post on successful creation
-        setOptimisticPosts(prev => prev.filter(p => p._id !== optimisticPost._id));
-        // The Feed component will automatically refresh and show the real post
+        setContent('');
+        setIsCreating(false);
+        // The Feed component will automatically refresh due to polling
       })
       .catch(error => {
         console.error('Error creating post:', error);
-        // Remove the optimistic post on error
-        setOptimisticPosts(prev => prev.filter(p => p._id !== optimisticPost._id));
-        // TODO: Show error message to user
       });
   };
 
@@ -99,7 +61,7 @@ export default function Home() {
               onClick={() => setIsCreating(true)}
               className="flex-grow bg-gray-100 rounded-full py-3 px-4 text-left text-gray-500 hover:bg-gray-200  transition-colors"
             >
-              Hi {user?.name}! what's on your mind?
+              Hi {user?.name}! what&apos;s on your mind?
             </button>
           </div>
         ) : (
@@ -133,7 +95,7 @@ export default function Home() {
       </div>
 
       {/* Feed Section */}
-      <Feed optimisticPosts={optimisticPosts} />
+      <Feed />
     </div>
   );
 }

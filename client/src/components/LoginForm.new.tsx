@@ -106,7 +106,7 @@ export default function LoginForm() {
               href="/register"
               className="text-sm text-blue-600  hover:text-blue-800  transition-colors"
             >
-              Don't have an account? Sign up
+              Don&apos;t have an account? Sign up
             </Link>
           </div>
         </form>
