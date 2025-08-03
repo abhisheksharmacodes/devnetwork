@@ -217,12 +217,24 @@ app.post('/api/posts', authenticateToken, [
 });
 
 // Get all posts (feed)
-app.get('/api/posts', async (req, res) => {
+app.get('/api/posts', authenticateToken, async (req, res) => {
   try {
     const posts = await Post.find()
       .populate('author', 'name email')
       .sort({ createdAt: -1 });
-    res.json(posts);
+
+    const userId = req.user.userId;
+    const postsWithInteractions = posts.map(post => {
+      const hasLiked = post.likes.includes(userId);
+      const hasDisliked = post.dislikes.includes(userId);
+      return {
+        ...post.toObject(),
+        hasLiked,
+        hasDisliked
+      };
+    });
+
+    res.json(postsWithInteractions);
   } catch (error) {
     console.error('Get posts error:', error);
     res.status(500).json({ message: 'Server error' });
@@ -230,12 +242,24 @@ app.get('/api/posts', async (req, res) => {
 });
 
 // Get user's posts
-app.get('/api/users/:userId/posts', async (req, res) => {
+app.get('/api/users/:userId/posts', authenticateToken, async (req, res) => {
   try {
     const posts = await Post.find({ author: req.params.userId })
       .populate('author', 'name email')
       .sort({ createdAt: -1 });
-    res.json(posts);
+
+    const currentUserId = req.user.userId;
+    const postsWithInteractions = posts.map(post => {
+      const hasLiked = post.likes.includes(currentUserId);
+      const hasDisliked = post.dislikes.includes(currentUserId);
+      return {
+        ...post.toObject(),
+        hasLiked,
+        hasDisliked
+      };
+    });
+
+    res.json(postsWithInteractions);
   } catch (error) {
     console.error('Get user posts error:', error);
     res.status(500).json({ message: 'Server error' });

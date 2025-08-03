@@ -1,14 +1,11 @@
-# LinkedIn Clone - Community Platform
+# Dev Network - Community Platform
 
 A mini LinkedIn-like community platform built with Next.js frontend and Node.js/Express backend with MongoDB.
 
-## Features
+## Admin/demo user login
+- email: johndoe@email.com
+- password: Johndoe@123
 
-- **User Authentication**: Register/Login with email and password
-- **User Profiles**: View user profiles with name, email, and bio
-- **Public Post Feed**: Create and view text-only posts
-- **Profile Pages**: View individual user profiles and their posts
-- **Real-time Updates**: Posts appear immediately after creation
 
 ## Tech Stack
 
@@ -16,7 +13,6 @@ A mini LinkedIn-like community platform built with Next.js frontend and Node.js/
 - Next.js 15 with TypeScript
 - Tailwind CSS for styling
 - React Hook Form for form handling
-- Axios for API calls
 - Lucide React for icons
 
 ### Backend
@@ -31,6 +27,7 @@ A mini LinkedIn-like community platform built with Next.js frontend and Node.js/
 - Node.js (v16 or higher)
 - MongoDB (local installation or MongoDB Atlas)
 - npm or yarn
+
 
 ## Setup Instructions
 
@@ -84,6 +81,20 @@ npm run dev
 ```
 
 The frontend will run on `http://localhost:3000`
+
+
+## Additional features
+In addition to the features described in assignment, Dev Network gives facility to like or dislike a post which gets update in real time for all registered users.
+
+
+## Features
+- **User Authentication**: Register/Login with email and password
+- **User Profiles**: View user profiles with name, email, and bio
+- **Public Post Feed**: Create and view text-only posts
+- **Profile Pages**: View individual user profiles and their posts
+- **Real-time likes and dislikes**: Users can like or dislike a post and it gets reflected in real-time
+
+
 
 ## API Endpoints
 

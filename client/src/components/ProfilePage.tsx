@@ -28,7 +28,7 @@ export default function ProfilePage({
   initialData: InitialData;
 }) {
   const [user, setUser] = useState<User | null>(initialData.user);
-  const [posts, setPosts] = useState<Post[]>(initialData.posts);
+  const [posts, setPosts] = useState<Post[]>(Array.isArray(initialData.posts) ? initialData.posts : []);
   const [loading, setLoading] = useState(false);
 
   if (loading) {
