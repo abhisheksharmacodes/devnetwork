@@ -12,7 +12,7 @@ export default function Home() {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     if (token && userId) {
-      fetch(`https://devnetwork-back.vercel.app//api/users/${userId}`, {
+      fetch(`https://devnetwork-back.vercel.app/api/users/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -28,7 +28,7 @@ export default function Home() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    fetch('https://devnetwork-back.vercel.app//api/posts', {
+    fetch('https://devnetwork-back.vercel.app/api/posts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

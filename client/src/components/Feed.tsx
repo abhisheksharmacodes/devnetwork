@@ -29,7 +29,7 @@ export default function Feed() {
         return;
       }
 
-      const response = await fetch('https://devnetwork-back.vercel.app//api/posts', {
+      const response = await fetch('https://devnetwork-back.vercel.app/api/posts', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -48,7 +48,7 @@ export default function Feed() {
     if (!token) return;
 
     try {
-      const response = await fetch(`https://devnetwork-back.vercel.app//api/posts/${postId}/like`, {
+      const response = await fetch(`https://devnetwork-back.vercel.app/api/posts/${postId}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -78,7 +78,7 @@ export default function Feed() {
     if (!token) return;
 
     try {
-      const response = await fetch(`https://devnetwork-back.vercel.app//api/posts/${postId}/dislike`, {
+      const response = await fetch(`https://devnetwork-back.vercel.app/api/posts/${postId}/dislike`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
