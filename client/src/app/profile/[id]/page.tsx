@@ -92,7 +92,41 @@ export default function ProfileRoute(props: {
   return (
     <div className="container mx-auto px-4">
       {loading ? (
-        <div className="text-center py-8">Loading...</div>
+        <div className="animate-pulse space-y-8 px-80 py-8">
+          {/* Profile Header Skeleton */}
+          <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+            <div className="h-32 bg-gray-200"></div>
+            <div className="p-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-20 h-20 rounded-full bg-gray-200"></div>
+                <div className="space-y-3 flex-1">
+                  <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                </div>
+              </div>
+              <div className="mt-4 space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Posts Section Skeleton */}
+          <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+            <div className="p-6 border-b border-gray-100">
+              <div className="h-6 bg-gray-200 rounded w-1/4"></div>
+            </div>
+            <div className="divide-y divide-gray-100">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="p-6 space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       ) : !user ? (
         <div className="text-center py-8">
           <h2 className="text-xl font-semibold">User not found</h2>
