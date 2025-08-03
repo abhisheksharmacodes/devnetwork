@@ -25,6 +25,7 @@ export default function Feed() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
+        console.log('No token found, skipping fetch');
         setLoading(false);
         return;
       }
@@ -34,10 +35,15 @@ export default function Feed() {
           'Authorization': `Bearer ${token}`
         }
       });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      setPosts(data || []);
+      console.log('Received posts data:', data);
+      setPosts(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setPosts([]);
     } finally {
       setLoading(false);
     }
