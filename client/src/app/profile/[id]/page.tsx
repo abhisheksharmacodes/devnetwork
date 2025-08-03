@@ -96,10 +96,10 @@ export default function ProfileRoute(props: {
       ) : !user ? (
         <div className="text-center py-8">
           <h2 className="text-xl font-semibold">User not found</h2>
-          <p className="text-gray-600 mt-2">This profile doesn't exist or has been removed.</p>
+          <p className="text-gray-600 mt-2">This profile doesn&apos;t exist or has been removed.</p>
         </div>
       ) : (
-        <ProfilePage initialData={{ user, posts: posts || [] }} userId={params.id} />
+        <ProfilePage initialData={{ user, posts: posts || [] }} />
       )}
     </div>
   );

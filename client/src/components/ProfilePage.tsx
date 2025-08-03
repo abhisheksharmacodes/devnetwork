@@ -21,23 +21,12 @@ interface InitialData {
 }
 
 export default function ProfilePage({ 
-  userId, 
   initialData 
 }: { 
-  userId: string;
   initialData: InitialData;
 }) {
-  const [user, setUser] = useState<User | null>(initialData.user);
-  const [posts, setPosts] = useState<Post[]>(Array.isArray(initialData.posts) ? initialData.posts : []);
-  const [loading, setLoading] = useState(false);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  const [user] = useState<User | null>(initialData.user);
+  const [posts] = useState<Post[]>(Array.isArray(initialData.posts) ? initialData.posts : []);
 
   if (!user) {
     return (
