@@ -32,16 +32,16 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50  py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
         <div className="text-center mb-10">
           <h2 className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">Welcome back</h2>
-          <p className="text-gray-600">Sign in to your account</p>
+          <p className="text-gray-600 ">Sign in to your account</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="bg-white/90 backdrop-blur-sm py-8 px-10 shadow-xl rounded-2xl space-y-6 border border-gray-100">
+        <form onSubmit={handleSubmit} className="bg-white/80 backdrop-blur-sm py-8 px-10 shadow-xl rounded-2xl space-y-6 border border-gray-100 ">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700  mb-1">
               Email address
             </label>
             <div className="mt-1 relative group">
@@ -51,7 +51,7 @@ export default function LoginForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 transition-all duration-200 group-hover:border-blue-500"
+                className="w-full px-4 py-3 border-2 border-gray-200  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent   transition-all duration-200 group-hover:border-blue-500"
                 placeholder="you@example.com"
               />
               <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -64,7 +64,7 @@ export default function LoginForm() {
           </div>
           
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700  mb-1">
               Password
             </label>
             <div className="mt-1 relative group">
@@ -74,7 +74,7 @@ export default function LoginForm() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 transition-all duration-200 group-hover:border-blue-500"
+                className="w-full px-4 py-3 border-2 border-gray-200  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent   transition-all duration-200 group-hover:border-blue-500"
                 placeholder="••••••••"
               />
               <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -86,7 +86,7 @@ export default function LoginForm() {
           </div>
 
           {error && (
-            <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 rounded-lg p-3">
+            <div className="flex items-center space-x-2 text-sm text-red-600  bg-red-50  rounded-lg p-3">
               <svg className="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
@@ -104,7 +104,7 @@ export default function LoginForm() {
           <div className="text-center mt-4">
             <Link
               href="/register"
-              className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+              className="text-sm text-blue-600  hover:text-blue-800  transition-colors"
             >
               Don't have an account? Sign up
             </Link>

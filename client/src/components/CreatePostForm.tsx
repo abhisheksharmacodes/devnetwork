@@ -38,13 +38,13 @@ export default function CreatePostForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8 p-6 bg-white rounded-lg shadow-sm">
       <textarea
         value={content}
         onChange={e => setContent(e.target.value)}
         placeholder="Share your thoughts with the community..."
         required
-        className="w-full p-4 border border-gray-200 dark:border-gray-700 rounded-lg mb-4 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none min-h-[120px]"
+        className="w-full p-4 border border-gray-200 rounded-lg mb-4 focus:ring-2 focus:ring-blue-500 focus:border-transparent  resize-none min-h-[120px]"
       />
       {error && <div className="text-red-500 mb-4 text-sm">{error}</div>}
       {success && <div className="text-green-500 mb-4 text-sm">{success}</div>}
