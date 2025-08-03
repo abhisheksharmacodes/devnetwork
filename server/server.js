@@ -25,23 +25,64 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://geekysharma31:bq00TVbJSVw1I5eL@cluster0.urb7jbj.mongodb.net/', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('Successfully connected to MongoDB.');
-})
-.catch((error) => {
-  console.error('MongoDB connection error:', error);
-  process.exit(1);  // Exit if unable to connect to database
+// Database connection check middleware
+app.use(async (req, res, next) => {
+  if (!isConnected) {
+    try {
+      await connectDB();
+    } catch (error) {
+      return res.status(500).json({ message: 'Database connection error' });
+    }
+  }
+  next();
 });
 
-const db = mongoose.connection;
-db.on('error', (error) => {
-  console.error('MongoDB error:', error);
-});
+// MongoDB Connection Manager
+let isConnected = false;
+const connectDB = async () => {
+  if (isConnected) {
+    console.log('Using existing MongoDB connection');
+    return;
+  }
+
+  try {
+    const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://geekysharma31:bq00TVbJSVw1I5eL@cluster0.urb7jbj.mongodb.net/';
+    console.log('Establishing new MongoDB connection...');
+    
+    await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000, // Close sockets after 45s
+    });
+
+    isConnected = true;
+    console.log('Successfully connected to MongoDB.');
+
+    mongoose.connection.on('error', (error) => {
+      console.error('MongoDB error:', error);
+      isConnected = false;
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      console.log('MongoDB disconnected');
+      isConnected = false;
+    });
+
+    mongoose.connection.on('reconnected', () => {
+      console.log('MongoDB reconnected');
+      isConnected = true;
+    });
+
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    isConnected = false;
+    process.exit(1);  // Exit if unable to connect to database
+  }
+};
+
+// Initial connection
+connectDB();
 
 // User Schema
 const userSchema = new mongoose.Schema({
