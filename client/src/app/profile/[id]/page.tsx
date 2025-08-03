@@ -44,11 +44,11 @@ export default function ProfileRoute(props: {
         };
 
         const [userResponse, postsResponse] = await Promise.all([
-          fetch(`http://localhost:5000/api/users/${params.id}`, { 
+          fetch(`https://devnetwork-back.vercel.app//api/users/${params.id}`, { 
             headers,
             method: 'GET'
           }),
-          fetch(`http://localhost:5000/api/users/${params.id}/posts`, { 
+          fetch(`https://devnetwork-back.vercel.app//api/users/${params.id}/posts`, { 
             headers,
             method: 'GET'
           })

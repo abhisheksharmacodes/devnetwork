@@ -61,7 +61,7 @@ Start the server:
 npm run dev
 ```
 
-The server will run on `http://localhost:5000`
+The server will run on `https://devnetwork-back.vercel.app/`
 
 ### 3. Frontend Setup
 
